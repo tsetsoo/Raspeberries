@@ -1,18 +1,13 @@
 import serial
 import FacilRecognitionTrigger
 
-ser = serial.Serial('/dev/ttyUSB0',9600)
+ser = serial.Serial('/dev/ttyUSB0',9600, timeout=None)
 s = [0,1]
 while True:
-    read_serial=ser.readline()
-    s[0] = str(int (ser.readline(),16))
-    print 's0 e: ' + s[0]
-    if s[0] == '1':
-        if FacilRecognitionTrigger.trigger() == 'simo':
+    if ser.read() == '1':
+        if FacilRecognitionTrigger.trigger() == 'tsetso':
             print "da stana"
-            ser.write('Welcome Simo')
+            ser.write('1')
         else:
             print 'ne e simo'
-            ser.write('chezni bunak')
-
-    print read_serial
+            ser.write('0')
