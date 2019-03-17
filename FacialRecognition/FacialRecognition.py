@@ -1,29 +1,12 @@
 import cv2
 import numpy as np
 import os
-from sklearn import preprocessing
 
-class LabelEncoding(object):
-# Method to encode labels from words to numbers
-    def encoding_labels(self, label_wordings):
-        self.le = preprocessing.LabelEncoder()
-        self.le.fit(label_wordings)
+realLabels = {0: "simo", 1: "tsetso"}
+numberLabels = {"simo": 0, "tsetso": 1}
 
-    def word_to_number(self, label_wordings):
-        return int(self.le.transform([label_wordings])[0])
-
-    def number_to_word(self, label_number):
-        return self.le.inverse_transform([label_number])[0]
 def getting_images_and_labels(path_input):
-    label_wordings = []
-    for roots, dirs, files in os.walk(path_input):
-        for fname in (x for x in files if x.endswith('.jpg')):
-            fpath = os.path.join(roots, fname)
-            label_wordings.append(fpath.split('\\')[-2])
-
     images = []
-    le = LabelEncoding()
-    le.encoding_labels(label_wordings)
     labels = []
     # Parse the input directory
     for roots, dirs, files in os.walk(path_input):
@@ -37,8 +20,8 @@ def getting_images_and_labels(path_input):
 
             for (x, y, w, h) in face:
                 images.append(img[y:y+h, x:x+w])
-                labels.append(le.word_to_number(names))
-    return images, labels, le
+                labels.append(numberLabels[names])
+    return images, labels
 if __name__=='__main__':
     path_cascade = "haarcascade_frontalface_alt.xml"
     train_img_path = 'C:\\Users\\Bonorose\\Desktop\\Ocado - Rasberies\\SmartHome\\SmartHome\\Images\\train'
@@ -46,11 +29,12 @@ if __name__=='__main__':
 
 faceCascade = cv2.CascadeClassifier(path_cascade)
 face_recognizer = cv2.face.LBPHFaceRecognizer_create()
-imgs, labels, le = getting_images_and_labels(train_img_path)
+imgs, labels, = getting_images_and_labels(train_img_path)
 
 print "nTraining..."
-#face_recognizer.train(imgs, np.array(labels))
-face_recognizer.read("trained.xml")
+print np.array(labels)
+face_recognizer.train(imgs, np.array(labels))
+face_recognizer.write("trained.xml")
 print 'nPerforming prediction on test images...'
 flag_stop = False
 for roots, dirs, files in os.walk(path_img_test):
@@ -65,9 +49,8 @@ for roots, dirs, files in os.walk(path_img_test):
         # Predict the output
             index_predicted, config = face_recognizer.predict(
             predicting_img[y:y+h, x:x+w])
-            print index_predicted
         # Convert to word label
-            person_predicted = le.number_to_word(index_predicted)
+            person_predicted = realLabels[index_predicted]
         # Overlay text on the output image and display it
             cv2.putText(predicting_img, 'Prediction: ' +
             person_predicted,
