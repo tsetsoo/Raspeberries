@@ -14,7 +14,7 @@ def getting_images_and_labels(path_input):
             fpath = os.path.join(roots, fname)
 
             img = cv2.imread(fpath, 0)
-            names = fpath.split('\\')[-2]
+            names = fpath.split('/')[-2]
 
             face = faceCascade.detectMultiScale(img, 1.1, 2, minSize=(100,100))
 
@@ -24,8 +24,8 @@ def getting_images_and_labels(path_input):
     return images, labels
 if __name__=='__main__':
     path_cascade = "haarcascade_frontalface_alt.xml"
-    train_img_path = 'C:\\Users\\Bonorose\\Desktop\\Ocado - Rasberies\\SmartHome\\SmartHome\\Images\\train'
-    path_img_test = 'C:\\Users\\Bonorose\\Desktop\\Ocado - Rasberies\\SmartHome\\SmartHome\\Images\\test'
+    train_img_path = 'Images/train'
+    path_img_test = 'Images/test'
 
 faceCascade = cv2.CascadeClassifier(path_cascade)
 face_recognizer = cv2.face.LBPHFaceRecognizer_create()
