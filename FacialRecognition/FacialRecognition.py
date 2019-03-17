@@ -33,8 +33,8 @@ imgs, labels, = getting_images_and_labels(train_img_path)
 
 print "nTraining..."
 print np.array(labels)
-face_recognizer.train(imgs, np.array(labels))
-face_recognizer.write("trained.xml")
+#face_recognizer.train(imgs, np.array(labels))
+face_recognizer.read("trained.xml")
 print 'nPerforming prediction on test images...'
 flag_stop = False
 for roots, dirs, files in os.walk(path_img_test):

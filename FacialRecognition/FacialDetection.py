@@ -5,14 +5,14 @@ import sys
 
 IOError = OSError
 #-----------
-frontalface_cascade = cv2.CascadeClassifier('D:\OpenCV\opencv\sources\data\haarcascades\haarcascade_frontalface_alt.xml')
+frontalface_cascade = cv2.CascadeClassifier('haarcascade_frontalface_alt.xml')
 
 
 #----------------
 if frontalface_cascade.empty():
     raise IOError('Unable to load the face cascade classifier xml file')
 
-capture = cv2.VideoCapture(0)
+capture = cv2.VideoCapture(usePiCamera=True)
 
 scale_factor = 0.4
 
@@ -22,7 +22,7 @@ while True:
 
     frame = cv2.resize(frame, None, fx=scale_factor, fy=scale_factor,
     interpolation=cv2.INTER_AREA)
-
+    
     gray_image = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     face_rectangle = frontalface_cascade.detectMultiScale(gray_image, 1.3, 5)
