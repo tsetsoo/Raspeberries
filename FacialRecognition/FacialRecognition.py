@@ -45,12 +45,12 @@ if __name__=='__main__':
     path_img_test = 'C:\\Users\\Bonorose\\Desktop\\Ocado - Rasberies\\SmartHome\\SmartHome\\Images\\test'
 
 faceCascade = cv2.CascadeClassifier(path_cascade)
-face_recognizer = cv2.createLBPHFaceRecognizer()
+face_recognizer = cv2.face.LBPHFaceRecognizer_create()
 imgs, labels, le = getting_images_and_labels(train_img_path)
 
 print "nTraining..."
 #face_recognizer.train(imgs, np.array(labels))
-face_recognizer.load("trained.xml")
+face_recognizer.read("trained.xml")
 print 'nPerforming prediction on test images...'
 flag_stop = False
 for roots, dirs, files in os.walk(path_img_test):
@@ -65,6 +65,7 @@ for roots, dirs, files in os.walk(path_img_test):
         # Predict the output
             index_predicted, config = face_recognizer.predict(
             predicting_img[y:y+h, x:x+w])
+            print index_predicted
         # Convert to word label
             person_predicted = le.number_to_word(index_predicted)
         # Overlay text on the output image and display it
